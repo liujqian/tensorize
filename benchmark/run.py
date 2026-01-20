@@ -146,6 +146,7 @@ SOFTWARE = [
     ("utdsp", BENCH_DIR + "software/utdsp/mult_big.mlir"),
 ]
 
+
 # fmt: on
 
 
@@ -164,6 +165,17 @@ def run_program(cmd, stdin=None):
 
 
 def main(argv):
+    with open("./tensorize_configs.txt", "a") as f:
+        out = "==== New Run: target=%s, out_dir=%s, n_iter=%d, noguide=%s, benchmarks=%s, timeout=%d ====\n" % (
+            FLAGS.target,
+            FLAGS.out_dir,
+            FLAGS.n_iter,
+            FLAGS.noguide,
+            ",".join(FLAGS.benchmarks),
+            FLAGS.timeout,
+        )
+        f.write(out)
+
     STATS_OUT_FILE = os.path.join(FLAGS.out_dir, "stats.csv")
     SYNTH_OUT_DIR = os.path.join(FLAGS.out_dir, "synth")
 
@@ -182,8 +194,8 @@ def main(argv):
         print("No benchmarks selected")
         return
 
-    for _ in tqdm.tqdm(range(FLAGS.n_iter)):
-        for benchmark_suite, filename in benchmarks:
+    for _ in range(FLAGS.n_iter):
+        for benchmark_suite, filename in tqdm.tqdm(benchmarks, total=len(benchmarks)):
             cmd = ["timeout", str(FLAGS.timeout * 60)]
             cmd += [
                 "python",

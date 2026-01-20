@@ -1,4 +1,4 @@
-benchmark/out
+
 benchmark/tensorize.log
 compile_commands.json
 ir.mlir
