@@ -7,7 +7,6 @@ from absl import app
 from absl import flags
 from timeit import default_timer as timer
 
-
 FLAGS = flags.FLAGS
 flags.DEFINE_string("target", "numpy", "Raising target")
 flags.DEFINE_string("out_dir", "out", "Result file containing statistics")
@@ -15,7 +14,6 @@ flags.DEFINE_integer("n_iter", 1, "Number of iterations")
 flags.DEFINE_bool("noguide", False, "Don't select operations automatically")
 flags.DEFINE_list("benchmarks", ["polybench", "software"], "Benchmarks to run")
 flags.DEFINE_integer("timeout", 30, "Timeout for each benchmark in minutes")
-
 
 SCRIPT_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../tensorize")
 SYNTHESIZER_PROGRAM = os.path.join(SCRIPT_DIR, "main.py")
@@ -65,8 +63,8 @@ SOFTWARE = [
     ("llama", BENCH_DIR + "software/llama/softmax_part2.mlir"),
     ("llama", BENCH_DIR + "software/llama/softmax_part3.mlir"),
     ("llama", BENCH_DIR + "software/llama/softmax_part4.mlir"),
-    #("llama", DIR + "software/llama/transformer_part1.mlir"),
-    #("llama", DIR + "software/llama/transformer_part2.mlir"),
+    # ("llama", DIR + "software/llama/transformer_part1.mlir"),
+    # ("llama", DIR + "software/llama/transformer_part2.mlir"),
     ("llama", BENCH_DIR + "software/llama/transformer_part3.mlir"),
     ("llama", BENCH_DIR + "software/llama/transformer_part4.mlir"),
 
@@ -152,8 +150,15 @@ SOFTWARE = [
 
 
 def run_program(cmd, stdin=None):
+    env = os.environ.copy()
+    extra_pythonpath = '/home/liujqian/Documents/Repositories/tensorize/build/python_packages/synth'
+    if extra_pythonpath:
+        old = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = (
+            extra_pythonpath if not old else extra_pythonpath + os.pathsep + old
+        )
     start = timer()
-    p = subprocess.run(cmd, stdout=subprocess.PIPE, input=stdin, stderr=subprocess.PIPE)
+    p = subprocess.run(cmd, stdout=subprocess.PIPE, input=stdin, stderr=subprocess.PIPE, env=env)
     end = timer()
     return p.stdout.decode("utf-8"), end - start, p.returncode
 
@@ -198,7 +203,7 @@ def main(argv):
             print(filename.replace(BENCH_DIR, ""), end="\t")
 
             out, runtime, exitcode = run_program(cmd)
-            with open("/tmp/tensorize.log", "a") as f:
+            with open("./tensorize.log", "a") as f:
                 f.write(out)
 
             # Print status code
