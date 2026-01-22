@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.multiply(np.where(np.divide(v1, np.full([1000, 1000], 16.0)), np.add(np.multiply(v1, np.full([1000, 1000], -0.0625)), np.add(np.divide(np.full([1000, 1000], -32.0), v1), np.full([1000, 1000], 3.0))), np.greater_equal(v1, np.full([1000, 1000], 16.0))), arg0)

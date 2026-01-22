@@ -56,7 +56,7 @@ SOFTWARE = [
     ("blend", BENCH_DIR + "software/blend/screen_blend_8.mlir"),
 
     # Llama
-    ("llama", BENCH_DIR + "software/llama/matmul.mlir"),
+    ("llama", BENCH_DIR + "software/llama/matmul_llama.mlir"),
     ("llama", BENCH_DIR + "software/llama/rmsnorm_part1.mlir"),
     ("llama", BENCH_DIR + "software/llama/rmsnorm_part2.mlir"),
     ("llama", BENCH_DIR + "software/llama/softmax_part1.mlir"),
